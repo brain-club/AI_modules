@@ -2,6 +2,8 @@
 # from transformers import BartTokenizer, BartModel
 from sentence_transformers import SentenceTransformer
 
+from keyword_extractor import keywordextract
+
 import torch
 from sklearn.cluster import AgglomerativeClustering
 import numpy as np
@@ -54,17 +56,10 @@ def cluster_id2embedding(id2embedding):
 
     return n_clusters, id2cluster
 
-def display_sentence_clusters(id2sentence, id2cluster, n_clusters):
-    sentences_cluster = {}
-    for i in range(n_clusters):
-        sentences_cluster[i] = []
-
-    for id, sentence in id2sentence.items():
-        cluster_id = id2cluster[id]
-        sentences_cluster[cluster_id].append(sentence)
-
-    for cluster_num, sentences in sentences_cluster.items():
-        print(f"\nCluster {cluster_num}:\n{sentences}\n")
+def display_sentence_clusters(id2sentence, clusters, n_clusters):
+    for cluster_name, sentence_ids in clusters.items():
+        sentences_line = "\n".join([id2sentence[id] for id in sentence_ids])
+        print(f"\nCluster {cluster_name}:\n{sentences_line}\n")
 
 def organizer(id2sentence):
     '''
@@ -72,12 +67,25 @@ def organizer(id2sentence):
             id2sentence : (dict) with sentence id as key and sentence as its value
         OUTPUT:
             n_clusters : (int) number of clusters
-            id2cluster : (dict) with sentence id as key and assigned cluster numebr as its value
+            clusters : (dict) cluster name(topic) as key and list of sentence ids as its value
     '''
     id2embedding = make_id2embedding(id2sentence)
     n_clusters, id2cluster = cluster_id2embedding(id2embedding)
 
-    return n_clusters, id2cluster
+    clusters_with_numbers = {}
+    for i in range(n_clusters):
+        clusters_with_numbers[i] = []
+
+    for id, sentence in id2sentence.items():
+        cluster_id = id2cluster[id]
+        clusters_with_numbers[cluster_id].append(id)
+
+    clusters = {}
+    for cluster_num, sentence_ids in clusters_with_numbers.items():
+        cluster_name = keywordextract(id2sentence[sentence_ids[0]])
+        clusters[cluster_name] = sentence_ids
+
+    return n_clusters, clusters
 
 
 if __name__== "__main__":
@@ -86,7 +94,7 @@ if __name__== "__main__":
         0: "automatically mute the voice when you don't intended",
         1: "Chatbot service - where newly joined company member can get the answers via text",
         2: "Chatbot for freshman in universities can ask anything freely via text",
-        3: "Loction-based service: the members' location are shown on the map and they can interact with other members via message",
+        3: "Location-based service: the members' location are shown on the map and they can interact with other members via message",
         4: "Meet your neighbor - SNS service"
     }
     
