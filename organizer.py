@@ -94,7 +94,7 @@ if __name__== "__main__":
         0: "automatically mute the voice when you don't intended",
         1: "Chatbot service - where newly joined company member can get the answers via text",
         2: "Chatbot for freshman in universities can ask anything freely via text",
-        3: "Location based service: the members' location are shown on the map and they can interact with other members via message",
+        3: "the members' location are shown on the map and they can interact with other members via message",
         4: "Meet your neighbor - SNS service"
     }
     

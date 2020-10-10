@@ -7,6 +7,7 @@ import numpy as np
 
 
 def keywordextract(sentence, model_path='./pretrained/keyword_extraction_pretrained.pt'):
+    # returns a single keyword of given sentence
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -26,13 +27,21 @@ def keywordextract(sentence, model_path='./pretrained/keyword_extraction_pretrai
                                   attention_mask=segments_tensors)
     logit = logit.detach().cpu().numpy()
     prediction.extend([list(p) for p in np.argmax(logit, axis=2)])
+
+    keyword = None
     for k, j in enumerate(prediction[0]):
         if j==1 or j==0:
             # print(tokenizer.convert_ids_to_tokens(tokens_tensor[0].to('cpu').numpy())[k])
             keyword = tokenizer.convert_ids_to_tokens(tokens_tensor[0].to('cpu').numpy())[k]
 
-    return keyword
-            
+    if "#" in keyword:
+        keyword = keyword.replace("#", "")
+        for word in sentence.split():
+            if keyword in word:
+                keyword = word.lower()
+
+    return keyword    
+
 
 if __name__ == "__main__":
     
