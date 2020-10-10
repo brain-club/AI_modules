@@ -41,5 +41,5 @@ Python file `organizer.py` containing function `organizer()`
 
   - **INPUT**: (dict) sentence ids as keys and sentences as its values
   
-  - **OUTPUT**: (int) number of clusters, (dict) sentence ids as keys and assigned cluster number as its value
+  - **OUTPUT**: (int) number of clusters, (dict) cluster name/topic as key and list of sentence ids as its value
   
