@@ -1,5 +1,5 @@
-from pytorch_transformers import BertTokenizer, BertModel
-from transformers import BartTokenizer, BartModel
+# from pytorch_transformers import BertTokenizer, BertModel
+# from transformers import BartTokenizer, BartModel
 from sentence_transformers import SentenceTransformer
 
 import torch
