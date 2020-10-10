@@ -15,6 +15,13 @@ Install `sentence-transformers` library, `Pytorch`, and `numpy` by using the com
 pip install sentence-transformers torch numpy
 ```
 
+For `keyword_extractor.py`, 
+
+Install `pytorch-pretraind-bert` library by using the command below.
+```
+pip install pytorch-pretrained-bert
+```
+
 
 ## Offensiveness Censoring
 Based on library from https://github.com/vzhou842/profanity-check
