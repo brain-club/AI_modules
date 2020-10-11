@@ -13,6 +13,7 @@ def keywordextract(sentence, model_path='./pretrained/keyword_extraction_pretrai
 
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
     model = BertForTokenClassification.from_pretrained("bert-base-uncased", num_labels=3)
+    model.to(device)
 
     text = sentence
     tkns = tokenizer.tokenize(text)
@@ -20,8 +21,7 @@ def keywordextract(sentence, model_path='./pretrained/keyword_extraction_pretrai
     segments_ids = [0] * len(tkns)
     tokens_tensor = torch.tensor([indexed_tokens]).to(device)
     segments_tensors = torch.tensor([segments_ids]).to(device)
-    model = torch.load(model_path)
-    model.to(device)
+    model = torch.load(model_path, map_location=device)
     model.eval()
     prediction = []
     logit = model(tokens_tensor, token_type_ids=None,
