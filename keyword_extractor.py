@@ -9,7 +9,7 @@ import numpy as np
 def keywordextract(sentence, model_path='./pretrained/keyword_extraction_pretrained.pt'):
     # returns a single keyword of given sentence
     
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
 
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
     model = BertForTokenClassification.from_pretrained("bert-base-uncased", num_labels=3)
@@ -21,10 +21,12 @@ def keywordextract(sentence, model_path='./pretrained/keyword_extraction_pretrai
     tokens_tensor = torch.tensor([indexed_tokens]).to(device)
     segments_tensors = torch.tensor([segments_ids]).to(device)
     model = torch.load(model_path)
+    model.to(device)
     model.eval()
     prediction = []
     logit = model(tokens_tensor, token_type_ids=None,
                                   attention_mask=segments_tensors)
+    #logit = model(tokens_tensor)
     logit = logit.detach().cpu().numpy()
     prediction.extend([list(p) for p in np.argmax(logit, axis=2)])
 
